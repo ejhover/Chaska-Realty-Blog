@@ -24,13 +24,20 @@ export function Navbar() {
       <nav className="max-w-6xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" data-testid="link-home-logo">
-            <div className="flex flex-col">
-              <span className="font-display text-xl font-semibold tracking-tight text-foreground">
-                Greg Anderson
-              </span>
-              <span className="text-xs text-primary font-medium tracking-wide">
-                RE/MAX Advisors West
-              </span>
+            <div className="flex items-center gap-3">
+              <img
+                src="/remax_logo.png"
+                alt="RE\/MAX logo"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+              />
+              <div className="flex flex-col">
+                <span className="font-display text-xl font-semibold tracking-tight text-foreground">
+                  Greg Anderson
+                </span>
+                <span className="text-xs text-primary font-medium tracking-wide">
+                  RE/MAX Advisors West
+                </span>
+              </div>
             </div>
           </Link>
 

@@ -4,8 +4,6 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BlogCard } from "@/components/BlogCard";
 import { blogPosts } from "@/lib/blogData";
-import heroHome from "@assets/stock_images/luxury_home_exterior_4a6b3f4f.jpg";
-import agentPhoto from "@assets/stock_images/professional_real_es_441f93e4.jpg";
 
 const highlights = [
   { icon: HomeIcon, value: "3,000+", label: "Families Helped" },
@@ -44,25 +42,27 @@ export default function Home() {
         <section className="relative overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src={heroHome}
+              src="wide_greg.jpg"
               alt="Beautiful home in Carver County, Minnesota"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/90 to-background/60" />
+            {/* Darken the right side of the image so text is readable when placed on the right */}
+            <div className="absolute inset-0 bg-gradient-to-l from-background/98 via-background/90 to-background/60" />
           </div>
 
-          <div className="relative max-w-6xl mx-auto px-6 lg:px-8 py-24 md:py-32 lg:py-44">
-            <div className="max-w-2xl animate-fade-up">
+          <div className="relative max-w-6xl mx-auto px-6 lg:px-8 py-24 md:py-32 lg:py-44 flex items-center min-h-[55vh] md:min-h-[60vh]">
+            {/* Centered on all screen sizes */}
+            <div className="w-full md:max-w-md animate-fade-up mx-auto text-center">
               <p className="text-primary font-medium tracking-wide mb-4">
                 Carver County's Trusted Realtor
               </p>
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground leading-tight mb-6">
-                Finding Your Perfect Home Starts With Someone Who Listens
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 w-full">
+                Greg Anderson
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-xl">
+              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
                 I'm Greg Anderson—your neighbor, your advocate, and your guide through one of life's biggest decisions. Let's find the right home for your family, together.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 justify-center md:w-full">
                 <Link
                   href="/about"
                   className="inline-flex items-center gap-2 px-6 py-3.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
@@ -152,7 +152,7 @@ export default function Home() {
               <div className="order-1 md:order-2">
                 <div className="relative">
                   <img
-                    src={agentPhoto}
+                    src="foodtruck_greg.jpg"
                     alt="Greg Anderson - RE/MAX Advisors West"
                     className="w-full rounded-2xl shadow-lg"
                   />

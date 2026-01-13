@@ -2,7 +2,6 @@ import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ArrowRight, Mail, Phone, MapPin, Facebook, Instagram, Youtube, FileText, Award, Users, Home, Heart, Quote, Star } from "lucide-react";
-import agentPhoto from "@assets/stock_images/professional_real_es_441f93e4.jpg";
 
 const stats = [
   { icon: Home, value: "3,000+", label: "Families Helped" },
@@ -29,7 +28,14 @@ const serviceAreas = [
   "Cologne",
 ];
 
-const designations = ["ABR", "CDPE", "CLHMS", "CRS", "GRI", "RFS"];
+const designations = [
+  "41 Years",
+  "Trusted Advisor",
+  "Top 1% MN",
+  "Luxury Specialist",
+  "Certified Negotiator",
+  "Community Expert",
+];
 
 export default function About() {
   return (
@@ -62,7 +68,7 @@ export default function About() {
               </div>
               <div className="relative">
                 <img
-                  src={agentPhoto}
+                  src="foodtruck_greg.jpg"p
                   alt="Greg Anderson - RE/MAX Advisors West"
                   className="w-full rounded-2xl shadow-xl"
                 />
