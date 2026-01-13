@@ -50,7 +50,7 @@ export function Navbar() {
               </Link>
             ))}
             <a
-              href="https://livingincarvercounty.com"
+              href="https://livingincarvercountypodcast.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium tracking-wide text-muted-foreground hover:text-primary transition-colors"
@@ -108,7 +108,7 @@ export function Navbar() {
                 </Link>
               ))}
               <a
-                href="https://livingincarvercounty.com"
+                href="https://livingincarvercountypodcast.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-base font-medium py-2 text-muted-foreground"

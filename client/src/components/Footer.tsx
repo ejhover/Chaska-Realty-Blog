@@ -39,7 +39,7 @@ export function Footer() {
               <Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors" data-testid="link-footer-about">
                 About
               </Link>
-              <a href="https://livingincarvercounty.com" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" data-testid="link-footer-podcast">
+              <a href="https://livingincarvercountypodcast.com" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" data-testid="link-footer-podcast">
                 <Podcast className="w-3.5 h-3.5" />
                 Living In Carver County Podcast
               </a>

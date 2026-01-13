@@ -72,7 +72,7 @@ export default function Home() {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
-                  href="https://livingincarvercounty.com"
+                  href="https://livingincarvercountypodcast.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3.5 bg-card border border-border rounded-lg font-medium hover:bg-secondary transition-colors"

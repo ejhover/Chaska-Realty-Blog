@@ -263,7 +263,7 @@ export default function About() {
 
             <div className="mt-10 pt-10 border-t border-border/50">
               <a
-                href="https://livingincarvercounty.com"
+                href="https://livingincarvercountypodcast.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
