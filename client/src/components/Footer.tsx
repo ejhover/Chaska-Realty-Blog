@@ -1,11 +1,11 @@
 import { Link } from "wouter";
-import { Facebook, Instagram, Youtube, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Podcast, FileText } from "lucide-react";
 
 const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
+  { icon: Facebook, href: "https://facebook.com/Advisors.West", label: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com/thehybridbroker/", label: "Instagram" },
+  { icon: Youtube, href: "https://www.youtube.com/@HelloIamGregAnderson", label: "YouTube" },
+  { icon: FileText, href: "https://substack.com/@helloiamgreganderson", label: "Substack" },
 ];
 
 export function Footer() {
@@ -14,11 +14,16 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <span className="font-display text-2xl font-semibold tracking-tight text-foreground">
-              Chaska<span className="text-primary">Realty</span>
-            </span>
-            <p className="mt-4 text-muted-foreground text-sm leading-relaxed max-w-xs">
-              Your trusted real estate partner in Chaska, Minnesota. Free advice, no commercials, just honest guidance.
+            <div className="flex flex-col mb-4">
+              <span className="font-display text-xl font-semibold tracking-tight text-foreground">
+                Greg Anderson
+              </span>
+              <span className="text-sm text-primary font-medium">
+                RE/MAX Advisors West
+              </span>
+            </div>
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
+              MN REALTOR since 1985. Over 3,000 homes sold. Broker/Owner serving Carver County and the southwest Minneapolis suburbs.
             </p>
           </div>
 
@@ -34,23 +39,27 @@ export function Footer() {
               <Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors" data-testid="link-footer-about">
                 About
               </Link>
+              <a href="https://livingincarvercounty.com" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" data-testid="link-footer-podcast">
+                <Podcast className="w-3.5 h-3.5" />
+                Living In Carver County Podcast
+              </a>
             </div>
           </div>
 
           <div>
             <h4 className="font-display text-lg font-medium mb-4">Contact</h4>
             <div className="flex flex-col gap-3">
-              <a href="tel:+16125551234" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors" data-testid="link-phone">
+              <a href="tel:+19525551234" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors" data-testid="link-phone">
                 <Phone className="w-4 h-4" />
-                (612) 555-1234
+                Contact Office
               </a>
-              <a href="mailto:hello@chaskarealty.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors" data-testid="link-email">
+              <a href="mailto:greg@advisorswest.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors" data-testid="link-email">
                 <Mail className="w-4 h-4" />
-                hello@chaskarealty.com
+                greg@advisorswest.com
               </a>
-              <span className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="w-4 h-4" />
-                Chaska, Minnesota
+              <span className="flex items-start gap-2 text-sm text-muted-foreground">
+                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>207 Chestnut St, Ste. 100<br />Chaska, MN 55318</span>
               </span>
             </div>
           </div>
@@ -58,13 +67,15 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} ChaskaRealty. All rights reserved.
+            © {new Date().getFullYear()} RE/MAX Advisors West. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             {socialLinks.map((social) => (
               <a
                 key={social.label}
                 href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
                 aria-label={social.label}
                 data-testid={`link-social-${social.label.toLowerCase()}`}

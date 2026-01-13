@@ -1,22 +1,48 @@
 import { Link } from "wouter";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { ArrowRight, Mail, Phone, MapPin, Facebook, Instagram, Youtube, Linkedin, Award, Users, Home, Heart } from "lucide-react";
+import { ArrowRight, Mail, Phone, MapPin, Facebook, Instagram, Youtube, FileText, Award, Users, Home, Heart, Dumbbell, GraduationCap, Utensils, Building2 } from "lucide-react";
 import agentPhoto from "@assets/stock_images/professional_real_es_441f93e4.jpg";
 
 const stats = [
-  { icon: Home, value: "500+", label: "Homes Sold" },
-  { icon: Users, value: "15+", label: "Years Experience" },
-  { icon: Award, value: "Top 5%", label: "MN Realtors" },
+  { icon: Home, value: "3,000+", label: "Homes Sold" },
+  { icon: Users, value: "41", label: "Years Experience" },
+  { icon: Award, value: "1985", label: "Licensed Since" },
   { icon: Heart, value: "100%", label: "Client Focus" },
 ];
 
 const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
+  { icon: Facebook, href: "https://facebook.com/Advisors.West", label: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com/thehybridbroker/", label: "Instagram" },
+  { icon: Youtube, href: "https://www.youtube.com/@HelloIamGregAnderson", label: "YouTube" },
+  { icon: FileText, href: "https://substack.com/@helloiamgreganderson", label: "Substack" },
 ];
+
+const specialties = [
+  "Development Land",
+  "Luxury Homes",
+  "Buyer Brokerage",
+  "Foreclosure Property",
+  "Relocation",
+  "New Construction",
+  "Investments",
+  "REO & Short Sales",
+];
+
+const serviceAreas = [
+  "Chaska",
+  "Chanhassen",
+  "Victoria",
+  "Eden Prairie",
+  "Carver",
+  "Waconia",
+  "Mayer",
+  "Cologne",
+  "Minnetonka",
+  "Norwood Young America",
+];
+
+const designations = ["ABR", "CDPE", "CLHMS", "CRS", "GRI", "RFS"];
 
 export default function About() {
   return (
@@ -30,24 +56,30 @@ export default function About() {
             <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
               <div>
                 <p className="text-primary font-medium tracking-wide mb-4">About Me</p>
-                <h1 className="font-display text-4xl md:text-5xl font-semibold mb-6 leading-tight">
-                  Your Chaska Real Estate Partner
+                <h1 className="font-display text-4xl md:text-5xl font-semibold mb-4 leading-tight">
+                  Greg Anderson
                 </h1>
+                <p className="text-xl text-primary font-medium mb-6">
+                  Broker/Owner, RE/MAX Advisors West
+                </p>
                 <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                  I'm a real estate broker based in Chaska, Minnesota, dedicated to helping 
-                  families navigate one of life's biggest decisions—with honesty, expertise, 
-                  and zero sales pressure.
+                  Family guy who lives in Carver County Minnesota, and has been selling homes in the southwest Minneapolis suburbs since 1985. Host of "The Living In Carver County Podcast."
                 </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  My mission is simple: provide free, valuable real estate education to 
-                  anyone who needs it. Through my blog, videos, and one-on-one conversations, 
-                  I share everything I've learned from 15+ years in the industry.
+                <p className="text-muted-foreground leading-relaxed mb-6">
+                  Connecting friends, building community—one conversation at a time. I also compete worldwide in kettlebell sport, traditional and marathon events.
                 </p>
+                <div className="flex flex-wrap gap-2">
+                  {designations.map((d) => (
+                    <span key={d} className="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
+                      {d}
+                    </span>
+                  ))}
+                </div>
               </div>
               <div className="relative">
                 <img
                   src={agentPhoto}
-                  alt="Your Chaska real estate broker"
+                  alt="Greg Anderson - RE/MAX Advisors West"
                   className="w-full rounded-xl shadow-lg"
                 />
               </div>
@@ -74,66 +106,135 @@ export default function About() {
           </div>
         </section>
 
-        {/* My Story */}
+        {/* Philosophy */}
         <section className="py-20 md:py-28">
           <div className="max-w-3xl mx-auto px-6 lg:px-8">
             <h2 className="font-display text-3xl md:text-4xl font-semibold mb-8 text-center">
-              My Story
+              My Philosophy
             </h2>
             <div className="prose prose-lg max-w-none text-muted-foreground">
               <p className="leading-relaxed mb-6">
-                I grew up in the Twin Cities area and fell in love with Chaska's unique blend 
-                of small-town charm and modern amenities. After spending years in corporate 
-                sales, I realized my true passion was helping people—not just closing deals.
+                To provide the best possible service available, I assembled a team to make sure each step of the transaction runs smoothly & efficiently. We follow a simple business philosophy: to provide an outstanding service experience.
               </p>
               <p className="leading-relaxed mb-6">
-                When I became a real estate broker, I saw an industry full of pushy sales 
-                tactics and confusing jargon. I knew there had to be a better way. That's 
-                when I started creating free educational content to help buyers and sellers 
-                feel empowered, not pressured.
+                It's our goal to exceed all expectations both during & after every transaction. As a result, clients enthusiastically refer family members, friends, neighbors, & co-workers to us for any aspect of the real estate process.
               </p>
               <p className="leading-relaxed mb-6">
-                Today, my blog and video content reaches thousands of people each month. 
-                Whether you work with me directly or simply benefit from my free resources, 
-                my goal is the same: help you make confident, informed decisions about 
-                your real estate journey.
-              </p>
-              <p className="leading-relaxed">
-                When I'm not helping clients or creating content, you'll find me exploring 
-                Minnesota's beautiful lakes, cheering on the Vikings (yes, really), and 
-                spending time with my family in our Chaska home.
+                Real estate evolves constantly—and so do I. Since 1985, I've solved complex property challenges, but my focus is what works NOW: AI-enhanced analysis, data-driven pricing, and technology delivering results clients can't achieve alone.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Why Free Content */}
+        {/* Three Specializations */}
         <section className="py-20 md:py-28 bg-secondary/30">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="font-display text-3xl md:text-4xl font-semibold mb-6">
-                Why Free Content?
+            <div className="text-center mb-12">
+              <p className="text-primary font-medium tracking-wide mb-2">Expertise</p>
+              <h2 className="font-display text-3xl md:text-4xl font-semibold">
+                Three Areas of Focus
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                I believe everyone deserves access to quality real estate education, 
-                regardless of whether they're ready to buy or sell. No commercials, 
-                no sponsored content, no hidden agenda—just genuine advice from someone 
-                who cares about doing right by people.
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-card p-8 rounded-xl border border-border/50">
+                <h3 className="font-display text-xl font-semibold mb-4">Traditional Residential Sales</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Helping families buy and sell with deep local knowledge from hundreds of annual transactions. I know which neighborhoods appreciate, which streets command premiums, and how to maximize value.
+                </p>
+              </div>
+              <div className="bg-card p-8 rounded-xl border border-border/50">
+                <h3 className="font-display text-xl font-semibold mb-4">Distressed Property Solutions</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Working with homeowners facing hardship, lenders managing REO portfolios, and investors. Clients include Fannie Mae, JP Morgan Chase, Bank of America, Wells Fargo, and national private equity firms.
+                </p>
+              </div>
+              <div className="bg-card p-8 rounded-xl border border-border/50">
+                <h3 className="font-display text-xl font-semibold mb-4">New Construction & Land</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Partnering with builders from single-lot sales to large-scale liquidations, with expertise in Carver County's Highway 212 corridor development.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Specialties & Service Areas */}
+        <section className="py-20 md:py-28">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 gap-12">
+              <div>
+                <h3 className="font-display text-2xl font-semibold mb-6">Specialties</h3>
+                <div className="flex flex-wrap gap-2">
+                  {specialties.map((s) => (
+                    <span key={s} className="px-4 py-2 bg-secondary rounded-lg text-sm text-secondary-foreground">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="font-display text-2xl font-semibold mb-6">Service Areas</h3>
+                <div className="flex flex-wrap gap-2">
+                  {serviceAreas.map((area) => (
+                    <span key={area} className="px-4 py-2 bg-secondary rounded-lg text-sm text-secondary-foreground">
+                      {area}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Recognition */}
+        <section className="py-16 bg-primary text-primary-foreground">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8 text-center">
+            <h3 className="font-display text-2xl font-semibold mb-6">Recognition</h3>
+            <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-6">
+              RE/MAX Circle of Legends, Lifetime Achievement, Hall of Fame | NAR: CRS, GRI, ABR, CDPE | Founded RE/MAX Advisors West (1997) | Featured in Star Tribune, REALTOR Magazine
+            </p>
+          </div>
+        </section>
+
+        {/* Personal */}
+        <section className="py-20 md:py-28">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8">
+            <div className="max-w-3xl mx-auto text-center mb-12">
+              <h2 className="font-display text-3xl md:text-4xl font-semibold mb-4">
+                Beyond Real Estate
+              </h2>
+              <p className="text-muted-foreground">
+                When I'm not helping clients, here's what keeps me busy.
               </p>
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-                data-testid="link-explore-content"
-              >
-                Explore Free Content
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center p-6">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-4">
+                  <Utensils className="w-6 h-6" />
+                </div>
+                <h4 className="font-display text-lg font-semibold mb-2">Food & Wine</h4>
+                <p className="text-sm text-muted-foreground">Exploring culinary experiences</p>
+              </div>
+              <div className="text-center p-6">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-4">
+                  <Dumbbell className="w-6 h-6" />
+                </div>
+                <h4 className="font-display text-lg font-semibold mb-2">Kettlebell Sport</h4>
+                <p className="text-sm text-muted-foreground">Worldwide competitor in traditional and marathon events</p>
+              </div>
+              <div className="text-center p-6">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-4">
+                  <Building2 className="w-6 h-6" />
+                </div>
+                <h4 className="font-display text-lg font-semibold mb-2">Civic Activities</h4>
+                <p className="text-sm text-muted-foreground">Chamber of Commerce & Rotary member</p>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Contact Section */}
-        <section className="py-20 md:py-28">
+        <section className="py-20 md:py-28 bg-secondary/30">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 lg:gap-20">
               <div>
@@ -141,50 +242,53 @@ export default function About() {
                   Let's Connect
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Have questions about the Chaska market? Thinking about buying or selling? 
-                  Or just want to say hi? I'd love to hear from you. No pressure, 
-                  just a friendly conversation.
+                  Whether you're thinking about buying, selling, or just want to chat about the Carver County market—I'd love to hear from you. No pressure, just a friendly conversation.
                 </p>
 
                 <div className="space-y-4 mb-8">
                   <a
-                    href="tel:+16125551234"
+                    href="tel:+19525551234"
                     className="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
                     data-testid="link-contact-phone"
                   >
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                       <Phone className="w-5 h-5 text-primary" />
                     </div>
-                    (612) 555-1234
+                    Contact Office
                   </a>
                   <a
-                    href="mailto:hello@chaskarealty.com"
+                    href="mailto:greg@advisorswest.com"
                     className="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
                     data-testid="link-contact-email"
                   >
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                       <Mail className="w-5 h-5 text-primary" />
                     </div>
-                    hello@chaskarealty.com
+                    greg@advisorswest.com
                   </a>
-                  <div className="flex items-center gap-3 text-foreground">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <div className="flex items-start gap-3 text-foreground">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <MapPin className="w-5 h-5 text-primary" />
                     </div>
-                    Chaska, Minnesota 55318
+                    <div>
+                      <p>207 Chestnut St, Ste. 100</p>
+                      <p>Chaska, MN 55318</p>
+                    </div>
                   </div>
                 </div>
 
-                <div>
+                <div className="mb-8">
                   <p className="text-sm font-medium text-muted-foreground mb-3">
-                    Follow for daily tips
+                    Connect with me
                   </p>
                   <div className="flex items-center gap-3">
                     {socialLinks.map((social) => (
                       <a
                         key={social.label}
                         href={social.href}
-                        className="w-10 h-10 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full bg-background hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-colors"
                         aria-label={social.label}
                         data-testid={`link-about-social-${social.label.toLowerCase()}`}
                       >
@@ -193,6 +297,17 @@ export default function About() {
                     ))}
                   </div>
                 </div>
+
+                <a
+                  href="https://livingincarvercounty.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
+                  data-testid="link-podcast-cta"
+                >
+                  Listen to the Living In Carver County Podcast
+                  <ArrowRight className="w-4 h-4" />
+                </a>
               </div>
 
               <div className="bg-card border border-border/50 rounded-xl p-8 shadow-sm">

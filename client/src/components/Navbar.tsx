@@ -17,9 +17,14 @@ export function Navbar() {
       <nav className="max-w-6xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" data-testid="link-home-logo">
-            <span className="font-display text-2xl font-semibold tracking-tight text-foreground">
-              Chaska<span className="text-primary">Realty</span>
-            </span>
+            <div className="flex flex-col">
+              <span className="font-display text-xl font-semibold tracking-tight text-foreground">
+                Greg Anderson
+              </span>
+              <span className="text-xs text-primary font-medium tracking-wide">
+                RE/MAX Advisors West
+              </span>
+            </div>
           </Link>
 
           <div className="hidden md:flex items-center gap-10">
@@ -37,6 +42,15 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+            <a
+              href="https://livingincarvercounty.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-medium tracking-wide text-muted-foreground hover:text-primary transition-colors"
+              data-testid="link-nav-podcast"
+            >
+              Podcast
+            </a>
           </div>
 
           <button
@@ -70,6 +84,15 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <a
+                href="https://livingincarvercounty.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-base font-medium py-2 text-muted-foreground"
+                data-testid="link-mobile-podcast"
+              >
+                Podcast
+              </a>
             </div>
           </div>
         )}
