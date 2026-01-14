@@ -32,6 +32,8 @@ jobs:
 
       - name: Build (client + server)
         run: npm run build
+        env:
+          VITE_BASE_URL: '/Chaska-Realty-Blog/'
 
       - name: Inspect workspace after build (debug)
         run: |
