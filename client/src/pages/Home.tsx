@@ -50,16 +50,16 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-l from-background/98 via-background/90 to-background/60" />
           </div>
 
-          <div className="relative max-w-6xl mx-auto px-6 lg:px-8 py-24 md:py-32 lg:py-44 flex items-center min-h-[55vh] md:min-h-[60vh]">
+          <div className="relative max-w-6xl mx-auto px-6 lg:px-8 py-12 md:py-16 lg:py-20 flex items-center min-h-[40vh] md:min-h-[45vh]">
             {/* Centered on all screen sizes */}
             <div className="w-full md:max-w-md animate-fade-up mx-auto text-center">
               <p className="text-primary font-medium tracking-wide mb-4">
                 Carver County's Trusted Realtor
               </p>
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 w-full">
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-4 w-full">
                 Greg Anderson
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
                 I'm Greg Anderson—your neighbor, your advocate, and your guide through one of life's biggest decisions. Let's find the right home for your family, together.
               </p>
               <div className="flex flex-wrap gap-4 justify-center md:w-full">
@@ -86,16 +86,30 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Stats Bar */}
-        <section className="py-12 bg-primary text-primary-foreground">
+
+        {/* Latest Content */}
+        <section className="py-20 md:py-28">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {highlights.map((item, index) => (
-                <div key={index} className="text-center">
-                  <item.icon className="w-6 h-6 mx-auto mb-2 opacity-80" />
-                  <p className="font-display text-2xl md:text-3xl font-semibold">{item.value}</p>
-                  <p className="text-sm opacity-80">{item.label}</p>
-                </div>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
+              <div>
+                <p className="text-primary font-medium tracking-wide mb-2">Free Resources</p>
+                <h2 className="font-display text-3xl md:text-4xl font-semibold">
+                  Helpful Insights for You
+                </h2>
+              </div>
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
+                data-testid="link-view-all-posts"
+              >
+                View All Posts
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredPosts.map((post) => (
+                <BlogCard key={post.id} post={post} />
               ))}
             </div>
           </div>
@@ -166,40 +180,18 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonial */}
-        <section className="py-16 bg-card border-y border-border/50">
-          <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-            <Quote className="w-10 h-10 mx-auto mb-6 text-primary/30" />
-            <blockquote className="font-display text-xl md:text-2xl text-foreground leading-relaxed mb-6">
-              "It's our goal to exceed all expectations both during and after every transaction. As a result, clients enthusiastically refer family members, friends, neighbors, and co-workers to us."
-            </blockquote>
-            <p className="text-muted-foreground">— The promise I've kept for 41 years</p>
-          </div>
-        </section>
 
-        {/* Latest Content */}
-        <section className="py-20 md:py-28">
+
+        {/* Stats Bar */}
+        <section className="py-12 bg-primary text-primary-foreground">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
-              <div>
-                <p className="text-primary font-medium tracking-wide mb-2">Free Resources</p>
-                <h2 className="font-display text-3xl md:text-4xl font-semibold">
-                  Helpful Insights for You
-                </h2>
-              </div>
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all"
-                data-testid="link-view-all-posts"
-              >
-                View All Posts
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredPosts.map((post) => (
-                <BlogCard key={post.id} post={post} />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {highlights.map((item, index) => (
+                <div key={index} className="text-center">
+                  <item.icon className="w-6 h-6 mx-auto mb-2 opacity-80" />
+                  <p className="font-display text-2xl md:text-3xl font-semibold">{item.value}</p>
+                  <p className="text-sm opacity-80">{item.label}</p>
+                </div>
               ))}
             </div>
           </div>

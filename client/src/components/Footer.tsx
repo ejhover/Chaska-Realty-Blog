@@ -1,10 +1,11 @@
 import { Link } from "wouter";
-import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Podcast, FileText } from "lucide-react";
+import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Podcast, FileText, Linkedin } from "lucide-react";
 
 const socialLinks = [
   { icon: Facebook, href: "https://facebook.com/Advisors.West", label: "Facebook" },
   { icon: Instagram, href: "https://www.instagram.com/thehybridbroker/", label: "Instagram" },
   { icon: Youtube, href: "https://www.youtube.com/@HelloIamGregAnderson", label: "YouTube" },
+  { icon: Linkedin, href: "https://www.linkedin.com/in/greg-anderson", label: "LinkedIn" },
   { icon: FileText, href: "https://substack.com/@helloiamgreganderson", label: "Substack" },
 ];
 

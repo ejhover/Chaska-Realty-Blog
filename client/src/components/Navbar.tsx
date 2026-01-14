@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Menu, X, Facebook, Instagram, Youtube, FileText } from "lucide-react";
+import { Menu, X, Facebook, Instagram, Youtube, FileText, Linkedin } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
@@ -12,6 +12,7 @@ const socialLinks = [
   { icon: Facebook, href: "https://facebook.com/Advisors.West", label: "Facebook" },
   { icon: Instagram, href: "https://www.instagram.com/thehybridbroker/", label: "Instagram" },
   { icon: Youtube, href: "https://www.youtube.com/@HelloIamGregAnderson", label: "YouTube" },
+  { icon: Linkedin, href: "https://www.linkedin.com/in/greg-anderson", label: "LinkedIn" },
   { icon: FileText, href: "https://substack.com/@helloiamgreganderson", label: "Substack" },
 ];
 
