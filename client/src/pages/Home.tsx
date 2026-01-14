@@ -50,37 +50,27 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-l from-background/98 via-background/90 to-background/60" />
           </div>
 
-          <div className="relative max-w-6xl mx-auto px-6 lg:px-8 py-12 md:py-16 lg:py-20 flex items-center min-h-[40vh] md:min-h-[45vh]">
-            {/* Centered on all screen sizes */}
-            <div className="w-full md:max-w-md animate-fade-up mx-auto text-center">
-              <p className="text-primary font-medium tracking-wide mb-4">
+          <div className="relative max-w-6xl mx-auto px-6 lg:px-8 py-6 md:py-10 lg:py-14 flex items-center min-h-[28vh] md:min-h-[32vh]">
+            {/* Right-aligned on all sizes */}
+            <div className="w-full md:max-w-md animate-fade-up ml-auto text-right">
+              <p className="text-primary font-medium tracking-wide mb-3">
                 Carver County's Trusted Realtor
               </p>
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-4 w-full">
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-2 w-full">
                 Greg Anderson
               </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+              <p className="text-lg text-muted-foreground leading-relaxed mb-4">
                 I'm Greg Anderson—your neighbor, your advocate, and your guide through one of life's biggest decisions. Let's find the right home for your family, together.
               </p>
-              <div className="flex flex-wrap gap-4 justify-center md:w-full">
+              <div className="flex flex-wrap gap-4 justify-end md:w-full">
                 <Link
                   href="/about"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
-                  data-testid="button-hero-about"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-destructive text-destructive-foreground rounded-lg font-medium hover:bg-destructive/90 transition-colors"
+                  data-testid="button-hero-connect"
                 >
-                  Let's Talk
+                  Let's Connect
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-                <a
-                  href="https://livingincarvercountypodcast.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-card border border-border rounded-lg font-medium hover:bg-secondary transition-colors"
-                  data-testid="button-hero-podcast"
-                >
-                  <Play className="w-4 h-4" />
-                  Hear My Podcast
-                </a>
               </div>
             </div>
           </div>
@@ -198,7 +188,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 md:py-28 bg-primary text-primary-foreground">
+        <section className="py-20 md:py-28 bg-primary text-primary-foreground border-t border-border/20 mt-2">
           <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
             <h2 className="font-display text-3xl md:text-4xl font-semibold mb-6">
               Ready to Take the Next Step?

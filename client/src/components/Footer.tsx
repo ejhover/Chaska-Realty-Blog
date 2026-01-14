@@ -1,11 +1,25 @@
 import { Link } from "wouter";
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Podcast, FileText, Linkedin } from "lucide-react";
 
+function TikTok({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M19.321 5.562a5.124 5.124 0 0 1-3.003-1.003A5.125 5.125 0 0 1 14.27 1h-3.45v14.24a2.897 2.897 0 1 1-2.897-2.897c.258 0 .508.036.748.1V8.9a6.3 6.3 0 0 0-.748-.045A6.341 6.341 0 1 0 14.27 15.2V7.91a8.58 8.58 0 0 0 5.05 1.617V5.562z" />
+    </svg>
+  );
+}
+
 const socialLinks = [
   { icon: Facebook, href: "https://facebook.com/Advisors.West", label: "Facebook" },
   { icon: Instagram, href: "https://www.instagram.com/thehybridbroker/", label: "Instagram" },
+  { icon: TikTok, href: "https://www.tiktok.com/@thehybridbroker", label: "TikTok" },
   { icon: Youtube, href: "https://www.youtube.com/@HelloIamGregAnderson", label: "YouTube" },
-  { icon: Linkedin, href: "https://www.linkedin.com/in/greg-anderson", label: "LinkedIn" },
+  { icon: Linkedin, href: "https://www.linkedin.com/in/gregoryranderson", label: "LinkedIn" },
   { icon: FileText, href: "https://substack.com/@helloiamgreganderson", label: "Substack" },
 ];
 
