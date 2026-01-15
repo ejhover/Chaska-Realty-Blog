@@ -1,83 +1,85 @@
 import { useQuery } from "@tanstack/react-query";
+import { supabase } from "./supabase";
 
+// Type for category (includes ID for admin operations)
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+// Fetch all categories from Supabase
 export async function fetchCategories(): Promise<string[]> {
-  const res = await fetch("/api/categories");
-  if (!res.ok) throw new Error("Failed to load categories");
-  return res.json();
+  const { data, error } = await supabase
+    .from("categories")
+    .select("name")
+    .order("name", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return (data || []).map((row: any) => row.name);
 }
 
-export async function createCategory(name: string, token: string) {
-  try {
-    const res = await fetch("/api/admin/categories", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ name }),
-    });
-    if (res.ok) return res.json();
-  } catch (e) {}
+// Fetch categories with IDs (for admin form)
+export async function fetchCategoriesWithIds(): Promise<Category[]> {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("id, name, slug")
+    .order("name", { ascending: true });
 
-  const fallbackToken = token || (typeof window !== 'undefined' ? sessionStorage.getItem('github_token') || '' : '');
-  if (!fallbackToken) throw new Error("No token available for fallback");
-  const { json: categories, sha } = await fetchJSONFile("server/data/categories.json", fallbackToken);
-  if (categories.includes(name)) throw new Error("Category exists");
-  categories.push(name);
-  await saveJSONFile("server/data/categories.json", categories, `Add category: ${name}`, fallbackToken, sha);
-  return { name, pushed: true };
+  if (error) throw new Error(error.message);
+  return data || [];
 }
 
-export async function renameCategory(name: string, newName: string, token: string) {
-  try {
-    const res = await fetch(`/api/admin/categories/${encodeURIComponent(name)}`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ newName }),
-    });
-    if (res.ok) return res.json();
-  } catch (e) {}
+// Create a new category (admin only)
+export async function createCategory(name: string) {
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const { error } = await supabase.from("categories").insert({
+    name,
+    slug,
+  });
 
-  const fallbackToken = token || (typeof window !== 'undefined' ? sessionStorage.getItem('github_token') || '' : '');
-  if (!fallbackToken) throw new Error("No token available for fallback");
-  const { json: categories, sha: catSha } = await fetchJSONFile("server/data/categories.json", fallbackToken);
-  if (!categories.includes(name)) throw new Error("Not found");
-  if (categories.includes(newName)) throw new Error("newName already exists");
-  const updatedCategories = categories.map((c: string) => (c === name ? newName : c));
-  // Update posts file too
-  const { json: posts, sha: postsSha } = await fetchJSONFile("server/data/posts.json", fallbackToken);
-  const updatedPosts = posts.map((p: any) => (p.category === name ? { ...p, category: newName } : p));
-  await saveJSONFile("server/data/categories.json", updatedCategories, `Rename category: ${name} -> ${newName}`, fallbackToken, catSha);
-  await saveJSONFile("server/data/posts.json", updatedPosts, `Rename category: ${name} -> ${newName}`, fallbackToken, postsSha);
-  return { oldName: name, newName, pushed: true };
+  if (error) throw new Error(error.message);
+  return { success: true };
 }
 
-export async function deleteCategory(name: string, token: string) {
-  try {
-    const res = await fetch(`/api/admin/categories/${encodeURIComponent(name)}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.ok) return res.json();
-  } catch (e) {}
+// Rename a category (admin only)
+export async function renameCategory(oldName: string, newName: string) {
+  // Find the category by name
+  const { data: cat, error: findErr } = await supabase
+    .from("categories")
+    .select("id")
+    .eq("name", oldName)
+    .single();
 
-  const fallbackToken = token || (typeof window !== 'undefined' ? sessionStorage.getItem('github_token') || '' : '');
-  if (!fallbackToken) throw new Error("No token available for fallback");
-  const { json: categories, sha: catSha } = await fetchJSONFile("server/data/categories.json", fallbackToken);
-  if (!categories.includes(name)) throw new Error("Not found");
-  const updatedCategories = categories.filter((c: string) => c !== name);
-  const { json: posts, sha: postsSha } = await fetchJSONFile("server/data/posts.json", fallbackToken);
-  const updatedPosts = posts.map((p: any) => (p.category === name ? { ...p, category: "Uncategorized" } : p));
-  await saveJSONFile("server/data/categories.json", updatedCategories, `Delete category: ${name}`, fallbackToken, catSha);
-  await saveJSONFile("server/data/posts.json", updatedPosts, `Delete category: ${name}`, fallbackToken, postsSha);
-  return { name, pushed: true };
+  if (findErr) throw new Error(findErr.message);
+
+  const newSlug = newName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const { error } = await supabase
+    .from("categories")
+    .update({ name: newName, slug: newSlug })
+    .eq("id", cat.id);
+
+  if (error) throw new Error(error.message);
+  return { success: true };
 }
 
+// Delete a category (admin only)
+export async function deleteCategory(name: string) {
+  const { error } = await supabase
+    .from("categories")
+    .delete()
+    .eq("name", name);
+
+  if (error) throw new Error(error.message);
+  return { success: true };
+}
+
+// React Query hook
 export function useCategories() {
   return useQuery({ queryKey: ["categories"], queryFn: fetchCategories, staleTime: 1000 * 60 * 5 });
+}
+
+// Hook for admin form (includes IDs)
+export function useCategoriesWithIds() {
+  return useQuery({ queryKey: ["categories-with-ids"], queryFn: fetchCategoriesWithIds, staleTime: 1000 * 60 * 5 });
 }
