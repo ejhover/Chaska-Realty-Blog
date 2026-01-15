@@ -36,6 +36,9 @@ jobs:
         env:
           VITE_BASE_URL: '/Chaska-Realty-Blog/'
 
+      - name: Create 404.html for client-side routing
+        run: cp dist/public/index.html dist/public/404.html
+
       - name: Inspect workspace after build (debug)
         # Print runtime versions and directory contents to aid debugging
         run: |
