@@ -219,12 +219,12 @@ export default function About() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-10">
               <a
-                href="tel:+19525551234"
+                href="tel:+16123866155"
                 className="flex items-center gap-3 px-6 py-4 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
                 data-testid="link-contact-phone"
               >
                 <Phone className="w-5 h-5" />
-                Call Me Directly
+                Call/Text Me Directly at +16123866155
               </a>
               <a
                 href="mailto:greg@advisorswest.com"

@@ -35,6 +35,8 @@ jobs:
         run: npm run build
         env:
           VITE_BASE_URL: '/Chaska-Realty-Blog/'
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Create 404.html for client-side routing
         run: cp dist/public/index.html dist/public/404.html

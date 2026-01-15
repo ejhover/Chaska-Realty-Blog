@@ -82,7 +82,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} RE/MAX Advisors West. All rights reserved.
+            © {new Date().getFullYear()} RE/MAX Advisors West. All rights reserved. Each office independently owned and operated.
           </p>
           <div className="flex items-center gap-4">
             {socialLinks.map((social) => (
