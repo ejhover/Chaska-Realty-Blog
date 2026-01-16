@@ -27,7 +27,7 @@ function Routes() {
 }
 
 function App() {
-  const basePath = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
+  const basePath = import.meta.env.DEV ? "" : import.meta.env.BASE_URL.replace(/\/$/, "") || "";
   
   return (
     <QueryClientProvider client={queryClient}>

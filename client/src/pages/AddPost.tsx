@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useCategoriesWithIds } from "@/lib/categoriesApi";
@@ -7,14 +7,15 @@ import { useLocation, useParams } from "wouter";
 import { createPost, updatePost } from "@/lib/postsApi";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { EditorJsEditor } from "@/components/EditorJsEditor";
-import type { EditorJsOutput } from "@/lib/editorjs";
-import { coerceToEditorJsOutput, extractPlainTextFromEditorJs } from "@/lib/editorjs";
+import { TiptapEditor } from "@/components/TiptapEditor";
+import type { JSONContent } from "@tiptap/react";
+import { coerceToRichContent, extractPlainTextFromRichContent } from "@/lib/tiptap";
 
 export default function AddPost() {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
-  const [editorData, setEditorData] = useState<EditorJsOutput | null>(null);
+  const [doc, setDoc] = useState<JSONContent | null>(null);
+  const [editorUploading, setEditorUploading] = useState(false);
   const { data: categoriesWithIds = [] } = useCategoriesWithIds();
   const [categoryId, setCategoryId] = useState("");
   const [type, setType] = useState("article");
@@ -29,6 +30,11 @@ export default function AddPost() {
   const params = useParams<{ id?: string }>();
   const postId = params?.id;
   const isEditing = !!postId;
+
+  const richContent = useMemo(() => {
+    if (!doc) return null;
+    return { kind: "tiptap" as const, version: 1 as const, doc };
+  }, [doc]);
 
   // Check if user is logged in
   useEffect(() => {
@@ -47,7 +53,7 @@ export default function AddPost() {
 
     async function loadPost() {
       if (!postId) {
-        setEditorData(coerceToEditorJsOutput(""));
+        setDoc({ type: "doc", content: [{ type: "paragraph" }] });
         return;
       }
 
@@ -65,7 +71,9 @@ export default function AddPost() {
         setCategoryId(data.category_id || "");
         setType(data.type || "article");
         setImageUrl(data.image || "");
-        setEditorData(coerceToEditorJsOutput(data.content));
+        const rich = coerceToRichContent(data.content);
+        if (rich.kind === "tiptap") setDoc(rich.doc);
+        else setDoc({ type: "doc", content: [{ type: "paragraph" }] });
       } catch (e: any) {
         if (!cancelled) toast({ title: "Failed to load post", description: e.message });
       }
@@ -124,13 +132,18 @@ export default function AddPost() {
       return;
     }
 
-    if (!editorData) {
+    if (!doc || !richContent) {
       toast({ title: "Editor is still loading" });
       return;
     }
 
+    if (editorUploading) {
+      toast({ title: "Image upload in progress", description: "Please wait for uploads to finish before saving." });
+      return;
+    }
+
     const image = imageData || imageUrl || `${import.meta.env.BASE_URL}remax_logo.png`;
-    const bodyText = extractPlainTextFromEditorJs(editorData);
+    const bodyText = extractPlainTextFromRichContent(richContent);
     const readTime = type === "video" ? "5 min watch" : computeReadTime(bodyText || excerpt);
 
     setLoading(true);
@@ -139,7 +152,7 @@ export default function AddPost() {
         await updatePost(postId, {
           title: title.trim(),
           excerpt: excerpt.trim(),
-          content: editorData,
+          content: richContent,
           category_id: categoryId,
           type,
           image,
@@ -149,7 +162,7 @@ export default function AddPost() {
         await createPost({
           title: title.trim(),
           excerpt: excerpt.trim(),
-          content: editorData,
+          content: richContent,
           category_id: categoryId,
           type,
           image,
@@ -184,77 +197,135 @@ export default function AddPost() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="flex-1 py-12">
-        <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <h1 className="font-display text-3xl font-semibold mb-2">{isEditing ? "Edit Blog Post" : "Add New Blog Post"}</h1>
-          <p className="text-muted-foreground mb-6">
-            Fill out the fields below and click <span className="font-medium">{isEditing ? "Save" : "Publish"}</span>. Changes appear instantly.
-          </p>
+      <main className="flex-1 py-10">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-col gap-8 lg:flex-row">
+            <section className="flex-1">
+              <div className="mb-6">
+                <h1 className="font-display text-3xl font-semibold">{isEditing ? "Edit post" : "Write a new post"}</h1>
+              </div>
 
-          <form onSubmit={onSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium mb-1">Title</label>
-              <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-3 py-2 rounded-lg border bg-input" />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Excerpt</label>
-              <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={3} className="w-full px-3 py-2 rounded-lg border bg-input" />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Content</label>
-              {editorData ? (
-                <EditorJsEditor initialData={editorData} onChange={setEditorData} />
-              ) : (
-                <div className="rounded-lg border bg-input px-3 py-6 text-sm text-muted-foreground">
-                  Loading editor...
+              <form onSubmit={onSubmit} className="space-y-6">
+                <div className="rounded-xl border bg-background p-4">
+                  <label className="block text-sm font-medium mb-1">Title</label>
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="A clear, specific title…"
+                    className="w-full rounded-lg border bg-input px-3 py-2 text-lg"
+                  />
                 </div>
-              )}
-              <p className="text-xs text-muted-foreground mt-2">
-                Tip: Use the “+” menu to insert headings and images.
-              </p>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Category</label>
-                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full px-3 py-2 rounded-lg border bg-input">
-                  <option value="">-- Select Category --</option>
-                  {categoriesWithIds.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
+                <div className="rounded-xl border bg-background p-4">
+                  <label className="block text-sm font-medium mb-1">Excerpt</label>
+                  <textarea
+                    value={excerpt}
+                    onChange={(e) => setExcerpt(e.target.value)}
+                    rows={3}
+                    placeholder="A short summary that shows up on the blog card…"
+                    className="w-full rounded-lg border bg-input px-3 py-2"
+                  />
+                </div>
+
+                <div className="rounded-xl border bg-background p-4">
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    <label className="block text-sm font-medium">Body</label>
+                    {editorUploading ? <span className="text-xs text-muted-foreground">Uploading image…</span> : null}
+                  </div>
+
+                  {doc ? (
+                    <TiptapEditor initialDoc={doc} onChange={setDoc} onUploadStateChange={setEditorUploading} />
+                  ) : (
+                    <div className="rounded-lg border bg-input px-3 py-6 text-sm text-muted-foreground">Loading editor…</div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setLocation("/blog")}
+                    className="rounded-lg border px-4 py-2"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading || editorUploading}
+                    className="rounded-lg bg-primary px-5 py-2 font-medium text-primary-foreground disabled:opacity-50"
+                  >
+                    {loading ? (isEditing ? "Saving…" : "Publishing…") : isEditing ? "Save" : "Publish"}
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <aside className="w-full lg:w-[360px]">
+              <div className="sticky top-6 space-y-4">
+                <div className="rounded-xl border bg-background p-4">
+                  <h2 className="text-sm font-semibold mb-3">Post settings</h2>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Category</label>
+                      <select
+                        value={categoryId}
+                        onChange={(e) => setCategoryId(e.target.value)}
+                        className="w-full rounded-lg border bg-input px-3 py-2"
+                      >
+                        <option value="">-- Select Category --</option>
+                        {categoriesWithIds.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Type</label>
+                      <select
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        className="w-full rounded-lg border bg-input px-3 py-2"
+                      >
+                        <option value="article">Article</option>
+                        <option value="video">Video</option>
+                        <option value="gallery">Gallery</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border bg-background p-4">
+                  <h2 className="text-sm font-semibold mb-3">Featured image</h2>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Upload file</label>
+                      <input type="file" accept="image/*" onChange={onFileChange} className="w-full" />
+                      {imageFileName ? (
+                        <div className="text-xs text-muted-foreground mt-1">Using: {imageFileName}</div>
+                      ) : null}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Or image URL</label>
+                      <input
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        placeholder="https://…"
+                        className="w-full rounded-lg border bg-input px-3 py-2"
+                      />
+                    </div>
+
+                    <div className="rounded-lg border bg-secondary/20 p-3 text-xs text-muted-foreground">
+                      The featured image shows on the blog card and top of the post.
+                    </div>
+                  </div>
+                </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Type</label>
-                <select value={type} onChange={(e) => setType(e.target.value)} className="w-full px-3 py-2 rounded-lg border bg-input">
-                  <option value="article">Article</option>
-                  <option value="video">Video</option>
-                  <option value="gallery">Gallery</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Image (file)</label>
-              <input type="file" accept="image/*" onChange={onFileChange} className="w-full" />
-              {imageFileName && <div className="text-sm text-muted-foreground mt-1">Using file: {imageFileName}</div>}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Or Image URL</label>
-              <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full px-3 py-2 rounded-lg border bg-input" />
-            </div>
-
-            <div className="flex items-center gap-4 justify-end">
-              <button type="submit" disabled={loading} className="px-5 py-2 rounded-lg bg-primary text-white font-medium disabled:opacity-50">
-                {loading ? (isEditing ? "Saving..." : "Publishing...") : isEditing ? "Save" : "Publish"}
-              </button>
-              <button type="button" onClick={() => setLocation("/blog")} className="px-5 py-2 rounded-lg border">Cancel</button>
-            </div>
-          </form>
+            </aside>
+          </div>
         </div>
       </main>
 

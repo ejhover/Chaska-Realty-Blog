@@ -1,6 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import type { BlogPost } from "@/components/BlogCard";
 import { supabase } from "./supabase";
+import { isEditorJsOutput } from "@/lib/editorjs";
+import { isTiptapWrapper } from "@/lib/tiptap";
+
+function parseMaybeEditorJs(content: unknown): unknown {
+  if (typeof content !== "string") return content;
+  const trimmed = content.trim();
+  if (!trimmed.startsWith("{")) return content;
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (isTiptapWrapper(parsed)) return parsed;
+    return isEditorJsOutput(parsed) ? parsed : content;
+  } catch {
+    return content;
+  }
+}
 
 // Fetch all published posts from Supabase
 export async function fetchPosts(): Promise<BlogPost[]> {
@@ -16,7 +31,7 @@ export async function fetchPosts(): Promise<BlogPost[]> {
     id: row.id,
     title: row.title,
     excerpt: row.excerpt || row.title,
-    content: row.content,
+    content: parseMaybeEditorJs(row.content),
     category: row.categories?.name || "Uncategorized",
     type: row.type || "article",
     image: row.image || `${import.meta.env.BASE_URL}remax_logo.png`,

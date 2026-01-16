@@ -5,15 +5,12 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const missingSupabaseEnv = !supabaseUrl || !supabaseKey;
 
-if (import.meta.env.DEV) {
-  console.log("Supabase URL:", supabaseUrl);
-  console.log("Supabase Key exists:", !!supabaseKey);
-}
-
 if (!supabaseUrl || !supabaseKey) {
-  console.error(
-    "Missing Supabase env vars. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY. The app will run, but data/auth/image uploads will fail.",
-  );
+  if (import.meta.env.DEV) {
+    console.warn(
+      "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local (and GitHub Secrets for deploys).",
+    );
+  }
 }
 
 function missingEnvError() {

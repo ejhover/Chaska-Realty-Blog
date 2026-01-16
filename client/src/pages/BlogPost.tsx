@@ -6,7 +6,9 @@ import { ArrowLeft, Calendar, Clock, Play, Share2, Facebook, Twitter, Linkedin }
 import { Badge } from "@/components/ui/badge";
 import { usePosts } from "@/lib/postsApi";
 import { EditorJsRenderer } from "@/components/EditorJsRenderer";
-import { isEditorJsOutput } from "@/lib/editorjs";
+import { coerceToEditorJsOutput } from "@/lib/editorjs";
+import { coerceToRichContent } from "@/lib/tiptap";
+import { TiptapRenderer } from "@/components/TiptapRenderer";
 
 export default function BlogPost() {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +41,25 @@ export default function BlogPost() {
       </div>
     );
   }
+
+  const rich = coerceToRichContent(post.content);
+  const editorData = rich.kind === "editorjs" ? coerceToEditorJsOutput(rich.doc) : null;
+  const hasTiptapContent =
+    rich.kind === "tiptap" &&
+    Array.isArray((rich.doc as any)?.content) &&
+    (rich.doc as any).content.length > 0;
+
+  const hasEditorJsContent =
+    !!editorData &&
+    (editorData.blocks || []).some((block: any) => {
+      if (!block || typeof block !== "object") return false;
+      if (block.type === "image") return !!block?.data?.file?.url;
+      if (block.type === "paragraph" || block.type === "header") {
+        const text = typeof block?.data?.text === "string" ? block.data.text.trim() : "";
+        return text.length > 0;
+      }
+      return false;
+    });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -103,20 +124,14 @@ export default function BlogPost() {
               {post.excerpt}
             </p>
 
-            {isEditorJsOutput(post.content) ? (
+            {hasTiptapContent ? (
               <div className="not-prose">
-                <EditorJsRenderer data={post.content} />
+                <TiptapRenderer doc={rich.doc as any} />
               </div>
-            ) : typeof post.content === "string" && post.content.trim() ? (
-              post.content
-                .split(/\r?\n/)
-                .map((line) => line.trim())
-                .filter(Boolean)
-                .map((line, idx) => (
-                  <p key={idx} className="leading-relaxed mb-4">
-                    {line}
-                  </p>
-                ))
+            ) : hasEditorJsContent && editorData ? (
+              <div className="not-prose">
+                <EditorJsRenderer data={editorData} />
+              </div>
             ) : null}
           </div>
 
