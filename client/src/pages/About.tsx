@@ -68,7 +68,7 @@ export default function About() {
               </div>
               <div className="relative">
                 <img
-                  src="foodtruck_greg.jpg"
+                  src={`${import.meta.env.BASE_URL}foodtruck_greg.jpg`}
                   alt="Greg Anderson - RE/MAX Advisors West"
                   className="w-full rounded-2xl shadow-xl"
                 />

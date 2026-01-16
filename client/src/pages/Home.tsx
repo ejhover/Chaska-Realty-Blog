@@ -44,7 +44,7 @@ export default function Home() {
         <section className="relative overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="wide_greg.jpg"
+              src={`${import.meta.env.BASE_URL}wide_greg.jpg`}
               alt="Beautiful home in Carver County, Minnesota"
               className="w-full h-full object-cover"
             />
@@ -158,7 +158,7 @@ export default function Home() {
               <div className="order-1 md:order-2">
                 <div className="relative">
                   <img
-                    src="foodtruck_greg.jpg"
+                    src={`${import.meta.env.BASE_URL}foodtruck_greg.jpg`}
                     alt="Greg Anderson - RE/MAX Advisors West"
                     className="w-full rounded-2xl shadow-lg"
                   />

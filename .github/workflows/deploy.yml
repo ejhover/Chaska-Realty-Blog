@@ -34,9 +34,11 @@ jobs:
       - name: Build (client + server)
         run: npm run build
         env:
-          VITE_BASE_URL: '/Chaska-Realty-Blog/'
+          # Use '/' for <user>.github.io repos, otherwise '/<repo-name>/' for project pages
+          VITE_BASE_URL: ${{ endsWith(github.repository, '.github.io') && '/' || format('/{0}/', github.event.repository.name) }}
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_BLOG_IMAGES_BUCKET: ${{ secrets.VITE_SUPABASE_BLOG_IMAGES_BUCKET }}
 
       - name: Create 404.html for client-side routing
         run: cp dist/public/index.html dist/public/404.html
@@ -54,11 +56,15 @@ jobs:
           ls -la dist/public || true
 
       - name: Add CNAME for custom domain
-        # Write the custom domain into dist/public/CNAME so Pages config is applied; create dir if needed
+        # Optional: set repo variable PAGES_CNAME (or secret) to write dist/public/CNAME
         run: |
           mkdir -p dist/public
-          echo "kylehoversten.com" > dist/public/CNAME
+          if [ -n "${PAGES_CNAME}" ]; then
+            echo "${PAGES_CNAME}" > dist/public/CNAME
+          fi
           ls -la dist/public
+        env:
+          PAGES_CNAME: ${{ vars.PAGES_CNAME || secrets.PAGES_CNAME }}
 
       - name: Upload artifact to GitHub Pages
         uses: actions/upload-pages-artifact@v4
