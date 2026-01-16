@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { useCategories, useCategoriesWithIds } from "@/lib/categoriesApi";
+import { useCategoriesWithIds } from "@/lib/categoriesApi";
 import { useToast } from "@/hooks/use-toast";
-import { useLocation } from "wouter";
-import { createPost } from "@/lib/postsApi";
+import { useLocation, useParams } from "wouter";
+import { createPost, updatePost } from "@/lib/postsApi";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { EditorJsEditor } from "@/components/EditorJsEditor";
+import type { EditorJsOutput } from "@/lib/editorjs";
+import { coerceToEditorJsOutput, extractPlainTextFromEditorJs } from "@/lib/editorjs";
 
 export default function AddPost() {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
-  const [content, setContent] = useState("");
-  const { data: categories = [] } = useCategories();
+  const [editorData, setEditorData] = useState<EditorJsOutput | null>(null);
   const { data: categoriesWithIds = [] } = useCategoriesWithIds();
   const [categoryId, setCategoryId] = useState("");
   const [type, setType] = useState("article");
@@ -24,6 +26,9 @@ export default function AddPost() {
   const queryClient = useQueryClient();
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
+  const params = useParams<{ id?: string }>();
+  const postId = params?.id;
+  const isEditing = !!postId;
 
   // Check if user is logged in
   useEffect(() => {
@@ -36,12 +41,48 @@ export default function AddPost() {
     });
   }, []);
 
+  // Load post data when editing
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPost() {
+      if (!postId) {
+        setEditorData(coerceToEditorJsOutput(""));
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("posts")
+          .select("id, title, excerpt, content, category_id, type, image")
+          .eq("id", postId)
+          .single();
+        if (error) throw new Error(error.message);
+        if (cancelled) return;
+
+        setTitle(data.title || "");
+        setExcerpt(data.excerpt || "");
+        setCategoryId(data.category_id || "");
+        setType(data.type || "article");
+        setImageUrl(data.image || "");
+        setEditorData(coerceToEditorJsOutput(data.content));
+      } catch (e: any) {
+        if (!cancelled) toast({ title: "Failed to load post", description: e.message });
+      }
+    }
+
+    loadPost();
+    return () => {
+      cancelled = true;
+    };
+  }, [postId, toast]);
+
   // Set default category
   useEffect(() => {
-    if (categoriesWithIds.length && !categoryId) {
+    if (categoriesWithIds.length && !categoryId && !isEditing) {
       setCategoryId(categoriesWithIds[0].id);
     }
-  }, [categoriesWithIds]);
+  }, [categoriesWithIds, categoryId, isEditing]);
 
   function readFileAsDataURL(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -83,25 +124,43 @@ export default function AddPost() {
       return;
     }
 
+    if (!editorData) {
+      toast({ title: "Editor is still loading" });
+      return;
+    }
+
     const image = imageData || imageUrl || `${import.meta.env.BASE_URL}remax_logo.png`;
-    const readTime = type === "video" ? "5 min watch" : computeReadTime(content || excerpt);
+    const bodyText = extractPlainTextFromEditorJs(editorData);
+    const readTime = type === "video" ? "5 min watch" : computeReadTime(bodyText || excerpt);
 
     setLoading(true);
     try {
-      await createPost({
-        title: title.trim(),
-        excerpt: excerpt.trim(),
-        content,
-        category_id: categoryId,
-        type,
-        image,
-        readTime,
-      });
+      if (isEditing && postId) {
+        await updatePost(postId, {
+          title: title.trim(),
+          excerpt: excerpt.trim(),
+          content: editorData,
+          category_id: categoryId,
+          type,
+          image,
+          readTime,
+        });
+      } else {
+        await createPost({
+          title: title.trim(),
+          excerpt: excerpt.trim(),
+          content: editorData,
+          category_id: categoryId,
+          type,
+          image,
+          readTime,
+        });
+      }
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      toast({ title: "Post created", description: `"${title}" has been added!` });
+      toast({ title: isEditing ? "Post updated" : "Post created", description: `"${title}" has been saved.` });
       setLocation("/blog");
     } catch (err: any) {
-      toast({ title: "Failed to create post", description: err.message });
+      toast({ title: isEditing ? "Failed to update post" : "Failed to create post", description: err.message });
     } finally {
       setLoading(false);
     }
@@ -127,8 +186,10 @@ export default function AddPost() {
 
       <main className="flex-1 py-12">
         <div className="max-w-3xl mx-auto px-6 lg:px-8">
-          <h1 className="font-display text-3xl font-semibold mb-2">Add New Blog Post</h1>
-          <p className="text-muted-foreground mb-6">Fill out the fields below and click <span className="font-medium">Publish</span>. Changes appear instantly.</p>
+          <h1 className="font-display text-3xl font-semibold mb-2">{isEditing ? "Edit Blog Post" : "Add New Blog Post"}</h1>
+          <p className="text-muted-foreground mb-6">
+            Fill out the fields below and click <span className="font-medium">{isEditing ? "Save" : "Publish"}</span>. Changes appear instantly.
+          </p>
 
           <form onSubmit={onSubmit} className="space-y-6">
             <div>
@@ -142,8 +203,17 @@ export default function AddPost() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Content (optional)</label>
-              <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={6} className="w-full px-3 py-2 rounded-lg border bg-input" />
+              <label className="block text-sm font-medium mb-1">Content</label>
+              {editorData ? (
+                <EditorJsEditor initialData={editorData} onChange={setEditorData} />
+              ) : (
+                <div className="rounded-lg border bg-input px-3 py-6 text-sm text-muted-foreground">
+                  Loading editor...
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground mt-2">
+                Tip: Use the “+” menu to insert headings and images.
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -180,7 +250,7 @@ export default function AddPost() {
 
             <div className="flex items-center gap-4 justify-end">
               <button type="submit" disabled={loading} className="px-5 py-2 rounded-lg bg-primary text-white font-medium disabled:opacity-50">
-                {loading ? "Publishing..." : "Publish"}
+                {loading ? (isEditing ? "Saving..." : "Publishing...") : isEditing ? "Save" : "Publish"}
               </button>
               <button type="button" onClick={() => setLocation("/blog")} className="px-5 py-2 rounded-lg border">Cancel</button>
             </div>

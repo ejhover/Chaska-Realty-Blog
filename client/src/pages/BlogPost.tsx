@@ -5,6 +5,8 @@ import { BlogCard } from "@/components/BlogCard";
 import { ArrowLeft, Calendar, Clock, Play, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { usePosts } from "@/lib/postsApi";
+import { EditorJsRenderer } from "@/components/EditorJsRenderer";
+import { isEditorJsOutput } from "@/lib/editorjs";
 
 export default function BlogPost() {
   const { id } = useParams<{ id: string }>();
@@ -100,38 +102,22 @@ export default function BlogPost() {
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">
               {post.excerpt}
             </p>
-            
-            <p className="leading-relaxed mb-6">
-              Whether you're a first-time homebuyer or a seasoned investor, understanding the local market 
-              is crucial to making smart decisions. In this {post.type === "video" ? "video" : "article"}, 
-              I break down everything you need to know in simple, actionable terms.
-            </p>
 
-            <h2 className="font-display text-2xl font-semibold mt-10 mb-4">Key Takeaways</h2>
-            <ul className="space-y-2 mb-6">
-              <li>Understanding current market conditions in Chaska and surrounding areas</li>
-              <li>How to evaluate property values and make competitive offers</li>
-              <li>Common pitfalls to avoid during the buying or selling process</li>
-              <li>When to act and when to wait based on market timing</li>
-            </ul>
-
-            <p className="leading-relaxed mb-6">
-              The real estate market in Minnesota has unique characteristics that set it apart from 
-              other regions. From seasonal fluctuations to local economic factors, there's a lot to 
-              consider when making one of life's biggest financial decisions.
-            </p>
-
-            <h2 className="font-display text-2xl font-semibold mt-10 mb-4">Why This Matters</h2>
-            <p className="leading-relaxed mb-6">
-              My goal is to give you the knowledge you need to feel confident in your real estate 
-              journey. No sales pressure, no hidden agenda—just practical advice from someone who's 
-              been helping families in Chaska find their perfect homes for over 15 years.
-            </p>
-
-            <p className="leading-relaxed">
-              Have questions about your specific situation? Feel free to reach out. I'm always happy 
-              to chat and provide personalized guidance based on your unique circumstances.
-            </p>
+            {isEditorJsOutput(post.content) ? (
+              <div className="not-prose">
+                <EditorJsRenderer data={post.content} />
+              </div>
+            ) : typeof post.content === "string" && post.content.trim() ? (
+              post.content
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line, idx) => (
+                  <p key={idx} className="leading-relaxed mb-4">
+                    {line}
+                  </p>
+                ))
+            ) : null}
           </div>
 
           {/* Share */}

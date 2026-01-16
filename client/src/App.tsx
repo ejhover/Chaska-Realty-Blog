@@ -20,6 +20,7 @@ function Routes() {
       <Route path="/about" component={About} />
       <Route path="/admin" component={Admin} />
       <Route path="/admin/add" component={AddPost} />
+      <Route path="/admin/edit/:id" component={AddPost} />
       <Route component={NotFound} />
     </Switch>
   );

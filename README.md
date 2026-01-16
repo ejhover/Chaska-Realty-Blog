@@ -14,6 +14,20 @@ Notes
 - The server will try to commit and push `server/data/posts.json` and `server/data/categories.json`. You must configure git credentials on the server (SSH key or remote with token) for pushes to succeed.
 - If the git push fails the change is still saved locally and the API will return `pushed: false`.
 
+Editor.js Image Uploads (Supabase Storage)
+
+The block editor uploads images directly to Supabase Storage from the browser.
+
+1) Create a bucket
+- Default bucket name is `blog-images`.
+- If your bucket uses a different name, set `VITE_SUPABASE_BLOG_IMAGES_BUCKET` in `.env.local` (and in GitHub Secrets for deploys).
+
+2) Make images readable
+- The app currently uses public URLs (`getPublicUrl`). Ensure the bucket is public, or add a Storage policy to allow public `select` on that bucket.
+
+3) Allow uploads
+- You must allow authenticated users to `insert` into `storage.objects` for your bucket.
+
 Security
 - ADMIN_TOKEN is a minimal approach. The Admin UI is not linked publicly; access the admin panel at `/admin` by URL and sign in with the token. For production, add proper authentication and HTTPS.
 

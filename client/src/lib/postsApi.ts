@@ -35,7 +35,7 @@ export async function createPost(post: any) {
     title: post.title,
     slug: post.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
     excerpt: post.excerpt,
-    content: post.content || "",
+    content: post.content ?? "",
     category_id: post.category_id,
     type: post.type || "article",
     image: post.image || `${import.meta.env.BASE_URL}remax_logo.png`,

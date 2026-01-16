@@ -207,7 +207,7 @@ export default function Admin() {
                 <div>
                   <h3 className="font-display text-xl font-semibold mb-4">Posts</h3>
                   {posts.length === 0 ? (
-                    <div className="text-sm text-muted-foreground">No posts yet. Create one!</div>
+                    <div className="text-sm text-muted-foreground">No posts.</div>
                   ) : (
                     posts.map((post) => (
                       <div key={post.id} className="flex items-center gap-4 p-4 border rounded-lg bg-card mb-2">
@@ -222,6 +222,7 @@ export default function Admin() {
                         <div className="text-xs text-muted-foreground text-right">
                           <div>{post.date}</div>
                           <div className="mt-3">
+                            <Link href={`/admin/edit/${post.id}`} className="px-3 py-1 rounded-lg border text-xs mr-2">Edit</Link>
                             <button onClick={() => onDelete(post.id)} className="px-3 py-1 rounded-lg bg-destructive text-destructive-foreground text-xs">Delete</button>
                           </div>
                         </div>

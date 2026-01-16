@@ -6,6 +6,7 @@ export interface BlogPost {
   id: string;
   title: string;
   excerpt: string;
+  content?: unknown;
   category: string;
   type: "video" | "article" | "gallery";
   image: string;
