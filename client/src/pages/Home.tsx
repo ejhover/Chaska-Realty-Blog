@@ -79,7 +79,7 @@ export default function Home() {
         title: "Couldn’t send message",
         description:
           err?.message ||
-          "If this keeps happening, email emmethoversten@gmail.com directly.",
+          "If this keeps happening, email thehybridbroker@gmail.com directly.",
       });
     } finally {
       setSending(false);
@@ -166,8 +166,8 @@ export default function Home() {
                     <Mail className="w-5 h-5 text-primary mt-0.5" />
                     <div>
                       <div className="font-medium">Email</div>
-                      <a className="text-sm text-primary hover:underline" href="mailto:emmethoversten@gmail.com">
-                        emmethoversten@gmail.com
+                      <a className="text-sm text-primary hover:underline" href="mailto:thehybridbroker@gmail.com">
+                        thehybridbroker@gmail.com
                       </a>
                     </div>
                   </div>
@@ -233,7 +233,7 @@ export default function Home() {
                   {sending ? "Sending…" : "Send message"}
                 </button>
                 <p className="text-xs text-muted-foreground">
-                  This will email <span className="font-medium">emmethoversten@gmail.com</span>.
+                  This will email <span className="font-medium">thehybridbroker@gmail.com</span>.
                 </p>
               </form>
             </div>

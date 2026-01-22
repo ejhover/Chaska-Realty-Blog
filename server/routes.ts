@@ -84,7 +84,7 @@ export async function registerRoutes(
       return res.status(400).json({ message: "Message is required" });
     }
 
-    const to = process.env.CONTACT_TO || "emmethoversten@gmail.com";
+    const to = process.env.CONTACT_TO || "thehybridbroker@gmail.com";
     const from = process.env.CONTACT_FROM || process.env.SMTP_USER || to;
 
     try {
