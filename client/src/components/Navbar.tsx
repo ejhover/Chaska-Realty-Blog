@@ -36,11 +36,26 @@ export function Navbar() {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  function scrollToTop() {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }
+
+  function handleNavLinkClick(href: string) {
+    return (e: React.MouseEvent) => {
+      if (href === location) {
+        e.preventDefault();
+        scrollToTop();
+      }
+      setMobileMenuOpen(false);
+    };
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/50">
       <nav className="max-w-6xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <Link href="/" data-testid="link-home-logo">
+          <Link href="/" onClick={handleNavLinkClick("/")} data-testid="link-home-logo">
             <div className="flex items-center gap-3">
               <img
                 src={`${import.meta.env.BASE_URL}remax_logo.png`}
@@ -63,6 +78,7 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                onClick={handleNavLinkClick(link.href)}
                 data-testid={`link-nav-${link.label.toLowerCase()}`}
                 className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
                   location === link.href
@@ -120,7 +136,7 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={handleNavLinkClick(link.href)}
                   data-testid={`link-mobile-${link.label.toLowerCase()}`}
                   className={`text-base font-medium py-2 transition-colors ${
                     location === link.href
