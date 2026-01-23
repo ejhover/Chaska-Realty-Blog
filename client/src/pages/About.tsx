@@ -46,9 +46,7 @@ export default function About() {
       <Navbar />
 
       <main className="flex-1">
-
         
-
         <OfficeLocationSection className="py-20 md:py-28 bg-secondary/30" />
 
         <ConnectContactSection
