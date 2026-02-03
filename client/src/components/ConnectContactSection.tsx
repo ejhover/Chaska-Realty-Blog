@@ -27,7 +27,9 @@ export function ConnectContactSection({
 
   const [sent, setSent] = useState(false);
   const [formName, setFormName] = useState("");
-  const [formContact, setFormContact] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [formPhone, setFormPhone] = useState("");
+  const [formPreference, setFormPreference] = useState<"text" | "call">("text");
   const [formMessage, setFormMessage] = useState("");
 
   const [state, handleSubmit] = useForm(formId);
@@ -38,7 +40,9 @@ export function ConnectContactSection({
     if (!state.succeeded) return;
 
     setFormName("");
-    setFormContact("");
+    setFormEmail("");
+    setFormPhone("");
+    setFormPreference("text");
     setFormMessage("");
     setSent(true);
     onSuccess?.();
@@ -59,6 +63,12 @@ export function ConnectContactSection({
     if (!formMessage.trim()) {
       e.preventDefault();
       toast({ title: "Message is required" });
+      return;
+    }
+
+    if (!formEmail.trim() && !formPhone.trim()) {
+      e.preventDefault();
+      toast({ title: "Please enter an email or phone number" });
       return;
     }
 
@@ -148,15 +158,43 @@ export function ConnectContactSection({
                 placeholder="Your name"
               />
             </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium mb-1">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formEmail}
+                  onChange={(e) => setFormEmail(e.target.value)}
+                  className="w-full rounded-lg border bg-input px-3 py-2"
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Phone</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formPhone}
+                  onChange={(e) => setFormPhone(e.target.value)}
+                  className="w-full rounded-lg border bg-input px-3 py-2"
+                  placeholder="(555) 555-5555"
+                  autoComplete="tel"
+                />
+              </div>
+            </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Contact info</label>
-              <input
-                name="email"
-                value={formContact}
-                onChange={(e) => setFormContact(e.target.value)}
+              <label className="block text-sm font-medium mb-1">Call or text?</label>
+              <select
+                name="contact_preference"
+                value={formPreference}
+                onChange={(e) => setFormPreference(e.target.value as "text" | "call")}
                 className="w-full rounded-lg border bg-input px-3 py-2"
-                placeholder="Email or phone"
-              />
+              >
+                <option value="text">Text me</option>
+                <option value="call">Call me</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Message</label>
