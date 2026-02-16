@@ -17,13 +17,16 @@ function parseMaybeEditorJs(content: unknown): unknown {
   }
 }
 
-// Fetch all published posts from Supabase
-export async function fetchPosts(): Promise<BlogPost[]> {
-  const { data, error } = await supabase
+// Fetch posts for preview (home page, blog list) - NO content field
+export async function fetchPostPreviews(limit?: number, offset: number = 0): Promise<BlogPost[]> {
+  let query = supabase
     .from("posts")
-    .select("*, categories(name)")
+    .select("id, title, slug, excerpt, type, image, read_time, category_id, created_at, categories(name)")
     .eq("published", true)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(offset, offset + (limit || 1000) - 1);
+
+  const { data, error } = await query;
 
   if (error) throw new Error(error.message);
 
@@ -31,10 +34,10 @@ export async function fetchPosts(): Promise<BlogPost[]> {
     id: row.id,
     title: row.title,
     excerpt: row.excerpt || row.title,
-    content: parseMaybeEditorJs(row.content),
+    content: "", // Empty for previews
     category: row.categories?.name || "Uncategorized",
     type: row.type || "article",
-    image: row.image ?? "",
+    image: row.image ?? "/remax_logo.png",
     date: new Date(row.created_at).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -42,6 +45,48 @@ export async function fetchPosts(): Promise<BlogPost[]> {
     }),
     readTime: row.read_time || "5 min read",
   }));
+}
+
+// Get total count of published posts (for pagination)
+export async function getPostCount(): Promise<number> {
+  const { count, error } = await supabase
+    .from("posts")
+    .select("*", { count: "exact", head: true })
+    .eq("published", true);
+
+  if (error) throw new Error(error.message);
+  return count || 0;
+}
+
+// Fetch a single post by ID (includes full content)
+export async function fetchPostById(id: string): Promise<BlogPost | null> {
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*, categories(name)")
+    .eq("id", id)
+    .eq("published", true)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") return null; // Not found
+    throw new Error(error.message);
+  }
+
+  return {
+    id: data.id,
+    title: data.title,
+    excerpt: data.excerpt || data.title,
+    content: parseMaybeEditorJs(data.content),
+    category: data.categories?.name || "Uncategorized",
+    type: data.type || "article",
+    image: data.image ?? "/remax_logo.png",
+    date: new Date(data.created_at).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }),
+    readTime: data.read_time || "5 min read",
+  };
 }
 
 // Create a new post (admin only)
@@ -88,7 +133,35 @@ export async function deletePost(id: string) {
   return { success: true };
 }
 
-// React Query hook
+// React Query hook for post previews (with optional pagination)
+export function usePostPreviews(limit?: number, offset: number = 0) {
+  return useQuery({ 
+    queryKey: ["post-previews", limit, offset], 
+    queryFn: () => fetchPostPreviews(limit, offset), 
+    staleTime: 1000 * 60 * 5 
+  });
+}
+
+// React Query hook for total post count
+export function usePostCount() {
+  return useQuery({ 
+    queryKey: ["post-count"], 
+    queryFn: getPostCount, 
+    staleTime: 1000 * 60 * 5 
+  });
+}
+
+// React Query hook for single post (with full content)
+export function usePost(id: string) {
+  return useQuery({ 
+    queryKey: ["post", id], 
+    queryFn: () => fetchPostById(id), 
+    staleTime: 1000 * 60 * 5,
+    enabled: !!id
+  });
+}
+
+// Legacy hook for backwards compatibility (uses previews)
 export function usePosts() {
-  return useQuery({ queryKey: ["posts"], queryFn: fetchPosts, staleTime: 1000 * 60 * 5 });
+  return usePostPreviews();
 }
