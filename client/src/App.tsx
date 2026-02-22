@@ -11,6 +11,11 @@ import BlogPost from "@/pages/BlogPost";
 import About from "@/pages/About";
 import Admin from "@/pages/Admin";
 import AddPost from "@/pages/AddPost";
+import ProbateEstate from "@/pages/ProbateEstate";
+import PreForeclosure from "@/pages/PreForeclosure";
+import Downsizing from "@/pages/Downsizing";
+import CarverCountyMarket from "@/pages/CarverCountyMarket";
+import PodcastPage from "@/pages/PodcastPage";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -44,6 +49,11 @@ function Routes() {
       <Route path="/admin" component={Admin} />
       <Route path="/admin/add" component={AddPost} />
       <Route path="/admin/edit/:id" component={AddPost} />
+      <Route path="/probate-estate-real-estate" component={ProbateEstate} />
+      <Route path="/pre-foreclosure-distressed-property" component={PreForeclosure} />
+      <Route path="/downsizing" component={Downsizing} />
+      <Route path="/carver-county-market" component={CarverCountyMarket} />
+      <Route path="/living-in-carver-county-podcast" component={PodcastPage} />
       <Route component={NotFound} />
     </Switch>
   );

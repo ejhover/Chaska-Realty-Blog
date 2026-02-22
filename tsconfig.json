@@ -1,5 +1,5 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
+  "include": ["client/src/**/*", "shared/**/*", "server/**/*", "client/src/lib/postsApi.ts", "client/Home-Design1-ModernLuxury.tsx", "client/Home-Design2-WarmPersonal.tsx", "client/Home-Design3-BoldProfessional.tsx"],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
