@@ -18,23 +18,26 @@ function parseMaybeEditorJs(content: unknown): unknown {
 }
 
 // Fetch posts for preview (home page, blog list) - NO content field
-export async function fetchPostPreviews(limit?: number, offset: number = 0): Promise<BlogPost[]> {
+export async function fetchPostPreviews(
+  limit?: number,
+  offset: number = 0
+): Promise<{ posts: BlogPost[]; count: number }> {
   let query = supabase
     .from("posts")
-    .select("id, title, slug, excerpt, type, image, read_time, category_id, created_at, categories(name)")
+    .select("id, title, slug, excerpt, type, image, read_time, category_id, created_at, categories(name)", { count: "exact" })
     .eq("published", true)
     .order("created_at", { ascending: false })
     .range(offset, offset + (limit || 1000) - 1);
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) throw new Error(error.message);
 
-  return (data || []).map((row: any) => ({
+  const posts = (data || []).map((row: any) => ({
     id: row.id,
     title: row.title,
     excerpt: row.excerpt || row.title,
-    content: "", // Empty for previews
+    content: "",
     category: row.categories?.name || "Uncategorized",
     type: row.type || "article",
     image: row.image ?? "/remax_logo.png",
@@ -45,6 +48,8 @@ export async function fetchPostPreviews(limit?: number, offset: number = 0): Pro
     }),
     readTime: row.read_time || "5 min read",
   }));
+
+  return { posts, count: count || 0 };
 }
 
 // Get total count of published posts (for pagination)
@@ -133,12 +138,11 @@ export async function deletePost(id: string) {
   return { success: true };
 }
 
-// React Query hook for post previews (with optional pagination)
 export function usePostPreviews(limit?: number, offset: number = 0) {
-  return useQuery({ 
-    queryKey: ["post-previews", limit, offset], 
-    queryFn: () => fetchPostPreviews(limit, offset), 
-    staleTime: 1000 * 60 * 10,
+  return useQuery({
+    queryKey: ["post-previews", limit, offset],
+    queryFn: () => fetchPostPreviews(limit, offset),
+    staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30
   });
 }

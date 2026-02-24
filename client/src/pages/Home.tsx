@@ -36,7 +36,8 @@ const whyChooseMe = [
 
 export default function Home() {
   // Only fetch 3 posts for the home page
-  const { data: posts = [] } = usePostPreviews(3);
+  const { data } = usePostPreviews(3, 0);
+  const posts = data?.posts ?? [];
   const [connectOpen, setConnectOpen] = useState(false);
 
   return (

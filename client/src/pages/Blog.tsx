@@ -16,8 +16,11 @@ export default function Blog() {
 
   // Fetch posts with pagination
   const offset = (currentPage - 1) * POSTS_PER_PAGE;
-  const { data: posts = [], isLoading, isError } = usePostPreviews(POSTS_PER_PAGE, offset);
-  const { data: totalCount = 0 } = usePostCount();
+
+  const { data, isLoading, isError } = usePostPreviews(POSTS_PER_PAGE, offset);
+  const posts = data?.posts ?? [];
+  const totalCount = data?.count ?? 0;
+
   const { data: categories = [] } = useCategories();
 
   // Filter posts by category and search

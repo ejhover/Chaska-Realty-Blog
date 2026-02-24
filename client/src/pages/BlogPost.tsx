@@ -18,7 +18,8 @@ export default function BlogPost() {
   const { data: post, isLoading: postLoading, isError: postError } = usePost(id || "");
 
   // Fetch related posts (just previews, no content)
-  const { data: allPosts = [] } = usePostPreviews();
+  const { data } = usePostPreviews();
+  const allPosts = data?.posts ?? [];
   const relatedPosts = allPosts.filter((p) => p.id !== id && p.category === post?.category).slice(0, 2);
 
   if (postLoading) {
