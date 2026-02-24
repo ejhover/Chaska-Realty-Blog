@@ -138,7 +138,8 @@ export function usePostPreviews(limit?: number, offset: number = 0) {
   return useQuery({ 
     queryKey: ["post-previews", limit, offset], 
     queryFn: () => fetchPostPreviews(limit, offset), 
-    staleTime: 1000 * 60 * 5 
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 30
   });
 }
 
@@ -147,7 +148,8 @@ export function usePostCount() {
   return useQuery({ 
     queryKey: ["post-count"], 
     queryFn: getPostCount, 
-    staleTime: 1000 * 60 * 5 
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 30
   });
 }
 
@@ -156,8 +158,9 @@ export function usePost(id: string) {
   return useQuery({ 
     queryKey: ["post", id], 
     queryFn: () => fetchPostById(id), 
-    staleTime: 1000 * 60 * 5,
-    enabled: !!id
+    staleTime: 1000 * 60 * 10,
+    enabled: !!id,
+    gcTime: 1000 * 60 * 30
   });
 }
 
