@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { BlogCard } from "@/components/BlogCard";
 import { ArrowLeft, Calendar, Clock, Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { usePostPreviews, usePost } from "@/lib/postsApi";
+import { usePost, useRelatedPostPreviews } from "@/lib/postsApi";
 import { EditorJsRenderer } from "@/components/EditorJsRenderer";
 import { coerceToEditorJsOutput } from "@/lib/editorjs";
 import { coerceToRichContent } from "@/lib/tiptap";
@@ -17,10 +17,8 @@ export default function BlogPost() {
   // Fetch the single post with full content and image
   const { data: post, isLoading: postLoading, isError: postError } = usePost(id || "");
 
-  // Fetch related posts (just previews, no content)
-  const { data } = usePostPreviews();
-  const allPosts = data?.posts ?? [];
-  const relatedPosts = allPosts.filter((p) => p.id !== id && p.category === post?.category).slice(0, 2);
+  // Fetch related posts directly from Supabase to avoid loading all previews.
+  const { data: relatedPosts = [] } = useRelatedPostPreviews(post?.category || "", id || "", 2);
 
   if (postLoading) {
     return (

@@ -22,6 +22,16 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
+app.disable("x-powered-by");
+
+app.use((_req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  next();
+});
+
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -48,8 +58,10 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      if (capturedJsonResponse && process.env.NODE_ENV !== "production") {
+        const serialized = JSON.stringify(capturedJsonResponse);
+        const clipped = serialized.length > 500 ? `${serialized.slice(0, 500)}...<truncated>` : serialized;
+        logLine += ` :: ${clipped}`;
       }
 
       log(logLine);
@@ -67,7 +79,7 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    log(`Unhandled error: ${message}`, "error");
   });
 
   // importantly only setup vite in development and after

@@ -52,6 +52,51 @@ export async function fetchPostPreviews(
   return { posts, count: count || 0 };
 }
 
+export async function fetchRelatedPostPreviews(
+  category: string,
+  excludeId: string,
+  limit: number = 2
+): Promise<BlogPost[]> {
+  if (!category) return [];
+
+  const { data: categoryRow, error: categoryError } = await supabase
+    .from("categories")
+    .select("id")
+    .eq("name", category)
+    .single();
+
+  if (categoryError || !categoryRow?.id) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id, title, slug, excerpt, type, image, read_time, category_id, created_at, categories(name)")
+    .eq("published", true)
+    .eq("category_id", categoryRow.id)
+    .neq("id", excludeId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) throw new Error(error.message);
+
+  return (data || []).map((row: any) => ({
+    id: row.id,
+    title: row.title,
+    excerpt: row.excerpt || row.title,
+    content: "",
+    category: row.categories?.name || "Uncategorized",
+    type: row.type || "article",
+    image: row.image ?? "/remax_logo.png",
+    date: new Date(row.created_at).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }),
+    readTime: row.read_time || "5 min read",
+  }));
+}
+
 // Get total count of published posts (for pagination)
 export async function getPostCount(): Promise<number> {
   const { count, error } = await supabase
@@ -138,10 +183,15 @@ export async function deletePost(id: string) {
   return { success: true };
 }
 
-export function usePostPreviews(limit?: number, offset: number = 0) {
+export function usePostPreviews(
+  limit?: number,
+  offset: number = 0,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
     queryKey: ["post-previews", limit, offset],
     queryFn: () => fetchPostPreviews(limit, offset),
+    enabled: options?.enabled ?? true,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30
   });
@@ -168,7 +218,21 @@ export function usePost(id: string) {
   });
 }
 
-// Legacy hook for backwards compatibility (uses previews)
-export function usePosts() {
-  return usePostPreviews();
+export function useRelatedPostPreviews(category: string, excludeId: string, limit: number = 2) {
+  return useQuery({
+    queryKey: ["related-posts", category, excludeId, limit],
+    queryFn: () => fetchRelatedPostPreviews(category, excludeId, limit),
+    enabled: !!category && !!excludeId,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+}
+
+// Legacy hook for backwards compatibility (returns posts array only)
+export function usePosts(options?: { enabled?: boolean }) {
+  const query = usePostPreviews(undefined, 0, options);
+  return {
+    ...query,
+    data: query.data?.posts ?? [],
+  };
 }

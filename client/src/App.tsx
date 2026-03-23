@@ -45,7 +45,13 @@ function ScrollToTop() {
 
 function Routes() {
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground">
+          Loading page...
+        </div>
+      }
+    >
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/blog" component={Blog} />

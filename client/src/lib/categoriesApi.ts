@@ -75,11 +75,21 @@ export async function deleteCategory(name: string) {
 }
 
 // React Query hook
-export function useCategories() {
-  return useQuery({ queryKey: ["categories"], queryFn: fetchCategories, staleTime: 1000 * 60 * 5 });
+export function useCategories(options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    enabled: options?.enabled ?? true,
+    staleTime: 1000 * 60 * 5,
+  });
 }
 
 // Hook for admin form (includes IDs)
-export function useCategoriesWithIds() {
-  return useQuery({ queryKey: ["categories-with-ids"], queryFn: fetchCategoriesWithIds, staleTime: 1000 * 60 * 5 });
+export function useCategoriesWithIds(options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: ["categories-with-ids"],
+    queryFn: fetchCategoriesWithIds,
+    enabled: options?.enabled ?? true,
+    staleTime: 1000 * 60 * 5,
+  });
 }

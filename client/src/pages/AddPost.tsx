@@ -15,9 +15,10 @@ import { Helmet } from "react-helmet-async";
 export default function AddPost() {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
   const [doc, setDoc] = useState<JSONContent | null>(null);
   const [editorUploading, setEditorUploading] = useState(false);
-  const { data: categoriesWithIds = [] } = useCategoriesWithIds();
+  const { data: categoriesWithIds = [] } = useCategoriesWithIds({ enabled: loggedIn });
   const [categoryId, setCategoryId] = useState("");
   const [type, setType] = useState("article");
   const [imageUrl, setImageUrl] = useState("");
@@ -29,7 +30,6 @@ export default function AddPost() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
-  const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const params = useParams<{ id?: string }>();
   const postId = params?.id;
