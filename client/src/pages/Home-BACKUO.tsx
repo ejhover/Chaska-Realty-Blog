@@ -12,7 +12,7 @@ import { Helmet } from "react-helmet-async";
 const highlights = [
   { icon: HomeIcon, value: "3,000+", label: "Families Helped" },
   { icon: TrendingUp, value: "41", label: "Years Experience" },
-  { icon: Award, value: "Hall of Fame", label: "RE/MAX" },
+  { icon: Award, value: "Lifetime Achievement Award", label: "RE/MAX" },
   { icon: Users, value: "Since 1985", label: "Trusted" },
 ];
 

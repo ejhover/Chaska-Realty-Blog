@@ -28,7 +28,7 @@ import { Helmet } from "react-helmet-async";
 const highlights = [
   { icon: HomeIcon,   value: "3,000+",      label: "Families Helped" },
   { icon: TrendingUp, value: "41",           label: "Years Experience" },
-  { icon: Award,      value: "Hall of Fame", label: "RE/MAX" },
+  { icon: Award,      value: "Lifetime Achievement Award", label: "RE/MAX" },
   { icon: Users,      value: "Since 1985",   label: "Trusted" },
 ];
 
@@ -78,7 +78,7 @@ export default function Home() {
         <title>Greg Anderson | Carver County REALTOR® Since 1985</title>
         <meta
           name="description"
-          content="Greg Anderson has helped 3,000+ families buy and sell homes in Chaska, Chanhassen, Victoria, Waconia and all of Carver County since 1985."
+          content="Greg Anderson has helped 3,000+ families buy and sell homes in Chaska, Chanhassen, Carver, Victoria, Waconia, Cologne and Twin Cities Metro since 1985."
         />
       </Helmet>
 
@@ -154,14 +154,14 @@ export default function Home() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-destructive mb-1">
+                    {/* <p className="text-[10px] font-bold uppercase tracking-widest text-destructive mb-1">
                       Carver County's Trusted Realtor
-                    </p>
+                    </p> */}
                     <h1 className="font-display text-xl font-bold text-white leading-tight">
                       Greg Anderson
                     </h1>
                     <p className="text-white/80 text-xs leading-relaxed mt-0.5">
-                      41 years · 3,000+ families · RE/MAX Hall of Fame
+                      41 years · 3,000+ families · RE/MAX Lifetime Achievement Award
                     </p>
                   </div>
                 </div>
@@ -176,7 +176,7 @@ export default function Home() {
                         Thinking about your next move?
                       </p>
                       <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                        Local guidance, clear strategy, and no-pressure support.
+                        Expert advice, clear strategy, and personalized service. Connecting friends, building community.
                       </p>
                     </div>
 
@@ -188,7 +188,7 @@ export default function Home() {
                         3,000+ Families
                       </span>
                       <span className="text-[10px] uppercase tracking-wide px-2 py-1 bg-secondary text-secondary-foreground rounded-sm">
-                        RE/MAX Hall of Fame
+                        RE/MAX Lifetime Achievement Award
                       </span>
                     </div>
                   </div>
@@ -198,7 +198,7 @@ export default function Home() {
                       Areas Served
                     </p>
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      Chaska · Chanhassen · Victoria · Eden Prairie
+                      Chaska · Chanhassen · Carver · Victoria · Waconia · Cologne <br></br> · Twin Cities Metro
                     </p>
                   </div>
 
