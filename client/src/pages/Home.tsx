@@ -163,6 +163,9 @@ export default function Home() {
                     <p className="text-white/80 text-xs leading-relaxed mt-0.5">
                       41 years · 3,000+ families · RE/MAX Lifetime Achievement Award
                     </p>
+                    <p className="text-white/90 text-xs italic leading-relaxed mt-1">
+                      Connecting friends, building community.
+                    </p>
                   </div>
                 </div>
 
@@ -173,10 +176,10 @@ export default function Home() {
                         Start Here
                       </p>
                       <p className="font-display text-lg font-bold text-foreground leading-tight">
-                        Thinking about your next move?
+                        No pressure. No pitch. Forty years of local.
                       </p>
                       <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                        Expert advice, clear strategy, and personalized service. Connecting friends, building community.
+                        Carver County since 1985. The person attorneys, families, and neighbors call when real estate gets complicated.
                       </p>
                     </div>
 
@@ -198,7 +201,7 @@ export default function Home() {
                       Areas Served
                     </p>
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      Chaska · Chanhassen · Carver · Victoria · Waconia · Cologne <br></br> · Twin Cities Metro
+                      Chaska · Chanhassen · Carver · Victoria · Waconia · Cologne · Twin Cities Metro
                     </p>
                   </div>
 
@@ -208,7 +211,7 @@ export default function Home() {
                     className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-destructive text-destructive-foreground text-xs font-bold uppercase tracking-wider rounded-sm hover:bg-destructive/90 transition-colors cursor-pointer w-full"
                     data-testid="button-hero-connect"
                   >
-                    Let's Connect <ArrowRight className="w-3 h-3" />
+                    Send Greg a Note <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
               </div>

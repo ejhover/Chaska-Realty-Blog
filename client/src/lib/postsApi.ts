@@ -17,6 +17,35 @@ function parseMaybeEditorJs(content: unknown): unknown {
   }
 }
 
+function slugify(input: string): string {
+  const slug = input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return slug || "post";
+}
+
+async function getUniquePostSlug(title: string): Promise<string> {
+  const baseSlug = slugify(title);
+  const { data, error } = await supabase
+    .from("posts")
+    .select("slug")
+    .like("slug", `${baseSlug}%`);
+
+  if (error) throw new Error(error.message);
+
+  const existing = new Set((data || []).map((row: any) => row.slug));
+  if (!existing.has(baseSlug)) return baseSlug;
+
+  let suffix = 2;
+  while (existing.has(`${baseSlug}-${suffix}`)) {
+    suffix += 1;
+  }
+
+  return `${baseSlug}-${suffix}`;
+}
+
 // Fetch posts for preview (home page, blog list) - NO content field
 export async function fetchPostPreviews(
   limit?: number,
@@ -141,9 +170,12 @@ export async function fetchPostById(id: string): Promise<BlogPost | null> {
 
 // Create a new post (admin only)
 export async function createPost(post: any) {
-  const { error } = await supabase.from("posts").insert({
+  const baseSlug = slugify(post.title);
+  let slug = await getUniquePostSlug(post.title);
+
+  let { error } = await supabase.from("posts").insert({
     title: post.title,
-    slug: post.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+    slug,
     excerpt: post.excerpt,
     content: post.content ?? "",
     category_id: post.category_id,
@@ -152,6 +184,23 @@ export async function createPost(post: any) {
     read_time: post.readTime || "5 min read",
     published: true,
   });
+
+  // Handle race condition if another post inserts the same slug between read and write.
+  if (error?.code === "23505") {
+    slug = `${baseSlug}-${Date.now()}`;
+    const retry = await supabase.from("posts").insert({
+      title: post.title,
+      slug,
+      excerpt: post.excerpt,
+      content: post.content ?? "",
+      category_id: post.category_id,
+      type: post.type || "article",
+      image: post.image ?? null,
+      read_time: post.readTime || "5 min read",
+      published: true,
+    });
+    error = retry.error;
+  }
 
   if (error) throw new Error(error.message);
   return { success: true };
